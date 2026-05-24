@@ -12,7 +12,7 @@ Minimal cross-platform direct I/O abstraction for Rust.
 
 ```toml
 [dependencies]
-odirect = "0.1"
+odirect = "0.2.0"
 ```
 
 ## Usage
