@@ -1,7 +1,13 @@
 use std::fs::File;
 use std::fs::OpenOptions;
 
-use std::os::unix::fs::OpenOptionsExt;
+#[cfg(target_os = "windows")]
+#[allow(dead_code)]
+use std::os::windows::fs::OpenOptionsExt;
+
+#[cfg(target_os = "macos")]
+#[allow(dead_code)]
+use std::os::unix::io::AsRawFd;
 
 #[allow(dead_code)]
 pub enum AccessMode {
@@ -13,6 +19,7 @@ pub enum AccessMode {
 #[cfg(target_os = "linux")]
 #[allow(dead_code)]
 pub fn open_direct_file(path: &str, mode: AccessMode) -> std::io::Result<File> {
+    use std::os::unix::fs::OpenOptionsExt;
     const O_DIRECT: i32 = 0o0040000;
 
     let mut opts = OpenOptions::new();

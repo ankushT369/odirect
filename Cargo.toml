@@ -2,5 +2,12 @@
 name = "odirect"
 version = "0.1.0"
 edition = "2024"
+license = "MIT"
+description = "Minimal cross-platform direct I/O abstraction for Rust."
+repository = "https://github.com/ankushT369/odirect"
+readme = "README.md"
+keywords = ["direct-io", "filesystem", "cross-platform"]
+categories = ["filesystem"]
 
 [dependencies]
+libc = "0.2"
