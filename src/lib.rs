@@ -1,17 +1,17 @@
 use std::fs::File;
 use std::fs::OpenOptions;
 
-#[cfg(target_os = "windows")]
+#[cfg(any(target_os = "linux", target_os = "freebsd"))]
 #[allow(dead_code)]
-use std::os::windows::fs::OpenOptionsExt;
+use std::os::unix::fs::OpenOptionsExt;
 
 #[cfg(target_os = "macos")]
 #[allow(dead_code)]
 use std::os::unix::io::AsRawFd;
 
-#[cfg(any(target_os = "linux", target_os = "freebsd"))]
+#[cfg(target_os = "windows")]
 #[allow(dead_code)]
-use std::os::unix::fs::OpenOptionsExt;
+use std::os::windows::fs::OpenOptionsExt;
 
 #[allow(dead_code)]
 pub enum AccessMode {
@@ -56,6 +56,9 @@ pub fn open_direct_file(
 
 /// Macos doesn't provides equivalent method to directly transfer data 
 /// from disk to userspace without it being cached in the OS page cache. 
+/// For more info:
+///     - https://github.com/axboe/fio/issues/48
+///     - https://github.com/ronomon/direct-io
 #[cfg(target_os = "macos")]
 #[allow(dead_code)]
 pub fn open_direct_file(
