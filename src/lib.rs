@@ -20,6 +20,17 @@ pub enum AccessMode {
     ReadWrite,
 }
 
+/// Opens a file with direct I/O (bypasses OS cache).
+/// 
+/// # Platform-specific behavior
+/// - Linux/FreeBSD: Uses O_DIRECT
+/// - macOS: Uses F_NOCACHE via fcntl
+/// - Windows: Uses FILE_FLAG_NO_BUFFERING (0x20000000)
+///
+/// # User responsibilities
+/// - Buffers must be aligned to block size (typically 4096 bytes)
+/// - I/O sizes must be multiples of block size
+/// - File offsets must be block-aligned
 #[cfg(any(target_os = "linux", target_os = "freebsd"))]
 #[allow(dead_code)]
 pub fn open_direct_file(
@@ -43,6 +54,8 @@ pub fn open_direct_file(
     opts.custom_flags(libc::O_DIRECT).open(path)
 }
 
+/// Macos doesn't provides equivalent method to directly transfer data 
+/// from disk to userspace without it being cached in the OS page cache. 
 #[cfg(target_os = "macos")]
 #[allow(dead_code)]
 pub fn open_direct_file(
